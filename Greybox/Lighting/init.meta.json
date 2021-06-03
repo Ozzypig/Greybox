@@ -1,0 +1,18 @@
+{
+	"className": "Lighting",
+	"properties": {
+		"Ambient": [0.27451, 0.27451, 0.27451],
+		"Brightness": 3,
+		"ColorShift_Bottom": [0, 0, 0],
+		"ColorShift_Top": [0, 0,0 ],
+		"EnvironmentDiffuseScale": 1,
+		"EnvironmentSpecularScale": 1,
+		"GlobalShadows": true,
+		"OutdoorAmbient": [0.27451, 0.27451, 0.27451],
+		"ShadowSoftness": 0.2,
+		"Technology": "ShadowMap",
+		"ClockTime": 14.5,
+		"GeographicLatitude": 0,
+		"ExposureCompensation": 0
+	}
+}
