@@ -1,3 +1,6 @@
 [submodule "lib/Cmdr"]
 	path = lib/Cmdr
 	url = https://github.com/evaera/Cmdr
+[submodule "lib/roblox-lua-promise"]
+	path = lib/roblox-lua-promise
+	url = https://github.com/evaera/roblox-lua-promise

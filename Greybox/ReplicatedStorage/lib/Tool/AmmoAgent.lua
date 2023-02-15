@@ -13,7 +13,9 @@ function AmmoAgent.new(tool)
 		tool = tool;
 	}, AmmoAgent)
 	if RunService:IsServer() then
-		self._ammoStepConn = RunService.Stepped:Connect(function (...) return self:ammoStep(...) end)
+		self._ammoStepConn = RunService.Stepped:Connect(function (...)
+			return self:ammoStep(...)
+		end)
 		self:restockAmmo()
 	end
 	return self
@@ -54,7 +56,7 @@ function AmmoAgent:takeAmmo(n)
 	self:setAmmo(math.max(0, self:getAmmo() - n))
 end
 
-function AmmoAgent:ammoStep(t, dt)
+function AmmoAgent:ammoStep(_t, dt)
 	local ammo = self:getAmmo()
 	local ammoMax = self:getAmmoMax()
 	local ammoRechargeTime = self:getAmmoRechargeTime()

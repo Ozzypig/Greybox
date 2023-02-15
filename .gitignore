@@ -1,6 +1,9 @@
 # Project place file
-/Greybox.rbxlx
+Greybox.rbxlx
 
 # Roblox Studio lock files
-/*.rbxlx.lock
-/*.rbxl.lock
+*.rbxlx.lock
+*.rbxl.lock
+
+# selene
+roblox.toml

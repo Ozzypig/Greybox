@@ -63,20 +63,24 @@ function Maid:__newindex(index, newTask)
 	end 
 	local oldTask = self.tasks[index]
 	self.tasks[index] = newTask
-	if oldTask then self:performTask(oldTask) end
+	if oldTask then
+		self:performTask(oldTask)
+	end
 end
 
 --- Executes the given task
 function Maid:performTask(task)
 	local ty = typeof(task)
 	if ty == "function" then
-		task()
+		task(self)
 	elseif ty == "Instance" then
 		task:Destroy()
 	elseif ty == "RBXScriptConnection" then
-		task:disconnect()
+		task:Disconnect()
 	elseif task.cleanup then
 		task:cleanup()
+	elseif task.destroy then
+		task:destroy()
 	else
 		error(("unknown task type \"%s\""):format(ty))
 	end

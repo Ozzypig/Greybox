@@ -30,18 +30,22 @@ function Binder:print(...)
 	end
 end
 
-function Binder:warb(...)
+function Binder:warn(...)
 	if self.debugMode then
 		warn(tostring(self), ...)
 	end
 end
 
 function Binder:bind()
-	assert(not self.bound)
+	assert(not self.bound, "Already bound")
 	self.bound = true
 	-- Connect
-	self.instanceAddedConn = self.evInstanceAdded:Connect(function (...) return self:onInstanceAdded(...) end)
-	self.instanceRemovedConn = self.evInstanceRemoved:Connect(function (...) return self:onInstanceRemoved(...) end)
+	self.instanceAddedConn = self.evInstanceAdded:Connect(function (...)
+		return self:onInstanceAdded(...)
+	end)
+	self.instanceRemovedConn = self.evInstanceRemoved:Connect(function (...)
+		return self:onInstanceRemoved(...)
+	end)
 	-- Construct
 	for _, object in pairs(CollectionService:GetTagged(self.tag)) do
 		self:onInstanceAdded(object)
@@ -50,7 +54,7 @@ function Binder:bind()
 end
 
 function Binder:unbind()
-	assert(self.bound)
+	assert(self.bound, "Not bound")
 	self.bound = false
 	-- Disconnect
 	self.instanceAddedConn:Disconnect()
@@ -69,19 +73,15 @@ function Binder:getObject(instance)
 	return self.objects[instance]
 end
 
-function Binder:setObject(instance, object)
-	assert(not self.objects[instance])
-	self.objects[instance] = object
-end
-
 function Binder:shouldBind(instance)
 	return not self.onlyBindDescendantsOf or instance:IsDescendantOf(self.onlyBindDescendantsOf)
 end
 
 function Binder:onInstanceAdded(instance)
-	assert(typeof(instance) == "Instance")
 	if not self.bound then return end
-	assert(not self:getObject(instance))
+	if self:getObject(instance) then
+		return
+	end
 	-- Ignore certain objects
 	if not self:shouldBind(instance) then
 		self:print(instance:GetFullName(), "Ignored")
@@ -96,7 +96,9 @@ end
 function Binder:onInstanceRemoved(instance)
 	-- Deconstruct
 	local object = self.objects[instance]
-	assert(object)
+	if not object then
+		return
+	end
 	object:cleanup()
 	object = nil
 	self.objects[instance] = nil

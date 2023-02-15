@@ -15,10 +15,18 @@ function Tool.new(tool)
 		tool = tool;
 	}, Tool)
 
-	self._equippedConn = tool.Equipped:Connect(function (...) return self:onEquipped(...) end)
-	self._unequippedConn = tool.Unequipped:Connect(function (...) return self:onUnequipped(...) end)
-	self._activatedConn = tool.Activated:Connect(function (...) return self:onActivated(...) end)
-	self._reenableFunc = function () self.tool.Enabled = true end
+	self._equippedConn = tool.Equipped:Connect(function (...)
+		return self:onEquipped(...)
+	end)
+	self._unequippedConn = tool.Unequipped:Connect(function (...)
+		return self:onUnequipped(...)
+	end)
+	self._activatedConn = tool.Activated:Connect(function (...)
+		return self:onActivated(...)
+	end)
+	self._reenableFunc = function ()
+		self.tool.Enabled = true
+	end
 	
 	if self:isEquipped() then
 		self:onEquipped(Players.LocalPlayer and Players.LocalPlayer:GetMouse())
@@ -107,7 +115,9 @@ function Tool:initNetworking()
 	if RunService:IsServer() then
 		if not self.remoteFunction then
 			self.remoteFunction = Instance.new("RemoteFunction")
-			self.remoteFunction.OnServerInvoke = function (...) return self:processRequest(...) end
+			self.remoteFunction.OnServerInvoke = function (...)
+				return self:processRequest(...)
+			end
 			self.remoteFunction.Parent = self.tool
 		end
 		if not self.remoteEvent then
@@ -120,7 +130,9 @@ function Tool:initNetworking()
 		end
 		if not self.remoteEvent then
 			self.remoteEvent = self.tool:WaitForChild("RemoteEvent")
-			self._clientEventConn = self.remoteEvent.OnClientEvent:Connect(function (...) return self:onDataReceived(...) end)
+			self._clientEventConn = self.remoteEvent.OnClientEvent:Connect(function (...)
+				return self:onDataReceived(...)
+			end)
 		end
 	end
 end
@@ -136,7 +148,10 @@ end
 
 function Tool:processRequest(requester, command, ...)
 	--warn("Tool:processRequest not implemented")
-	if self.onlyProcessOwnerRequests and requester ~= self:getPlayer() then warn("Request rejected") return Tool.REJECTED end
+	if self.onlyProcessOwnerRequests and requester ~= self:getPlayer() then
+		warn("Request rejected")
+		return Tool.REJECTED
+	end
 	local requestHandler = self.requestHandlers and self.requestHandlers[command]
 	assert(type(requestHandler) ~= "nil", "No request handler for command: " .. tostring(command))
 	return requestHandler(self, ...)

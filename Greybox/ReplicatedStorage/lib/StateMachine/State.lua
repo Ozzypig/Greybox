@@ -84,7 +84,9 @@ State.__index = State
 -- @tparam[opt] function onEnterCallback A `function` to immediately connect to @{State.onEnter|onEnter}
 -- @constructor
 function State.new(machine, id, onEnterCallback)
-	if type(id) ~= "string" then error("State.new expects string id", 3) end
+	if type(id) ~= "string" then
+		error("State.new expects string id", 3)
+	end
 	local self = setmetatable({
 		--- The parent @{StateMachine} which owns this state and can @{StateMachine:transition|transition} to it.
 		-- @treturn StateMachine
@@ -123,9 +125,7 @@ function State.new(machine, id, onEnterCallback)
 	
 	if type(onEnterCallback) == "function" then
 		self.maid:addTask(self.onEnter:connect(onEnterCallback))
-	elseif type(onEnterCallback) == "nil" then
-		-- that's ok
-	else
+	elseif type(onEnterCallback) ~= "nil" then
 		error("State.new() was given non-function onEnterCallback (" .. type(onEnterCallback) .. ", " .. tostring(onEnterCallback) .. ")")
 	end	
 	
